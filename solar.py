@@ -22,6 +22,7 @@ def solarize(image, thresholds):
     image1 = np.asarray(image1)
 
     if thresholds[2] != 0 or thresholds[3] != 255 or thresholds[4] != 0 or thresholds[5] != 255 or thresholds[6]!= 0 or thresholds[7] != 255:
+        # there will be solarization specific to color channels
         if image1.ndim == 3 and image1.shape[2] == 3:
             new_image = np.zeros_like(image1)
             source_img = image1
@@ -32,8 +33,13 @@ def solarize(image, thresholds):
             source_img[..., 0] = image1  # Red channel from image 1
             source_img[..., 1] = image1  # Green channel from image 1
             source_img[..., 2] = image1  # Blue channel from image 1
+            # then we make sure these channels get to the end of the pipeline
+            new_image = source_img
     else:
+        # there will NOT be solarization specific to color channels
         source_img = image1
+        # new_image will have as many channels as image1
+        new_image = np.zeros_like(image1)
 
     if thresholds[0] > 0:
         new_image = shadows_with_threshold(image_array=source_img, threshold=thresholds[0])
